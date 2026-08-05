@@ -37,10 +37,13 @@ def _read_entries(path: str):
 
 
 class WildcardsProcessor:
-    """Replaces __name__ wildcards with random lines from wildcards/name.txt.
+    """Replaces __name__ wildcards with random lines from wildcards files.
 
-    Recursive: a picked line may itself contain wildcards, which are resolved
-    in turn until no wildcard syntax remains. Seeded -> deterministic output.
+    Files are looked up in the 'wildcards' folder AND in all its subfolders
+    (first match in sorted order wins). Recursive: a picked line may itself
+    contain wildcards, which are resolved in turn. Unresolvable wildcards
+    (no file found / file has no usable entries) are left in place as-is.
+    Seeded -> deterministic output.
     """
 
     @classmethod
@@ -77,7 +80,14 @@ class WildcardsProcessor:
     # --- internals -------------------------------------------------------
 
     def _load_entries(self, name: str):
-        """Return random-pickable entries for a wildcard name or raise."""
+        """Return random-pickable entries for a wildcard name, or None.
+
+        Search order:
+          1. exact path (name may itself contain subfolder slashes),
+          2. all subfolders of WILDCARDS_DIR (first match in sorted order).
+        Returns None when nothing usable is found so the caller can leave
+        the placeholder in place. Raises only for unsafe names.
+        """
         if not name or ".." in name or name.startswith("/") or os.path.isabs(name):
             raise ValueError(
                 f"[WildcardsProcessor] Invalid wildcard name: '__{name}__'"
@@ -88,30 +98,61 @@ class WildcardsProcessor:
         if not name.lower().endswith(".txt"):
             candidates.append(name + ".txt")
 
+        # 1) exact path (keeps explicit subfolder refs like __sub/name__ working)
         for cand in candidates:
             path = os.path.join(WILDCARDS_DIR, cand)
             if os.path.isfile(path):
-                entries = _read_entries(path)
-                if not entries:
-                    raise ValueError(
-                        f"[WildcardsProcessor] Wildcard file '{cand}' has no "
-                        f"usable entries (only blank/comment lines)."
-                    )
-                return entries
+                return _read_entries(path) or None
 
-        raise FileNotFoundError(
-            f"[WildcardsProcessor] No wildcard file for '__{name}__'. "
-            f"Looked in: {WILDCARDS_DIR} (tried: {candidates}). "
-            f"Create {os.path.join(WILDCARDS_DIR, candidates[-1])}."
-        )
+        # 2) recursive search through all subfolders
+        for cand in candidates:
+            matches = self._find_in_subfolders(cand)
+            for path in matches:
+                entries = _read_entries(path)
+                if entries:
+                    return entries
+            # A matching file existed but had no usable entries -> unresolvable.
+            if matches:
+                return None
+
+        return None  # not found -> leave placeholder in place
+
+    @staticmethod
+    def _find_in_subfolders(filename: str):
+        """All files matching `filename` (case-insensitive) under WILDCARDS_DIR."""
+        matches = []
+        target = filename.lower()
+        for root, _dirs, files in os.walk(WILDCARDS_DIR):
+            for f in files:
+                if f.lower() == target:
+                    matches.append(os.path.join(root, f))
+        return sorted(matches)
 
     def _resolve(self, text: str, rng: random.Random) -> str:
-        """Replace wildcards left-to-right until none remain."""
+        """Replace wildcards left-to-right until none remain.
+
+        Wildcards with no resolvable file are left in place untouched.
+        """
         replacements = 0
+        pos = 0
+        missing = set()  # names known to be unresolvable -> skip, keep placeholder
+
         while True:
-            m = WILDCARD_RE.search(text)
+            m = WILDCARD_RE.search(text, pos)
             if m is None:
                 return text
+
+            name = m.group(1).strip()
+
+            if name in missing:
+                pos = m.end()
+                continue
+
+            entries = self._load_entries(name)
+            if entries is None:
+                missing.add(name)
+                pos = m.end()
+                continue
 
             replacements += 1
             if replacements > MAX_REPLACEMENTS:
@@ -121,9 +162,9 @@ class WildcardsProcessor:
                     f"that references itself). Wildcards dir: {WILDCARDS_DIR}"
                 )
 
-            name = m.group(1).strip()
-            entry = rng.choice(self._load_entries(name))
+            entry = rng.choice(entries)
             text = text[:m.start()] + entry + text[m.end():]
+            pos = m.start()  # re-scan the inserted text for nested wildcards
 
 
 NODE_CLASS_MAPPINGS = {
