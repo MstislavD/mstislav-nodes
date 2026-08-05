@@ -1,0 +1,6 @@
+elf
+dwarf
+orc
+human
+dragonborn
+halfling

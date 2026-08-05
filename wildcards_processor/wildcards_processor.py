@@ -1,0 +1,135 @@
+import os
+import random
+import re
+
+# Wildcard syntax: __name__ (name may contain letters, digits, underscores,
+# spaces, hyphens, dots and slashes so subfolders like __people/artist__ work).
+WILDCARD_RE = re.compile(r"__([\w\s\-./]+?)__")
+
+# Wildcard files live in the 'wildcards' folder next to this module.
+WILDCARDS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "wildcards")
+
+# Safety cap: any realistic prompt resolves in a handful of replacements.
+# Exceeding this means a file references itself (directly or via a chain).
+MAX_REPLACEMENTS = 500
+
+# Try in order: utf-8-sig handles BOM, cp1251 covers Russian wildcard files.
+_ENCODINGS = ("utf-8-sig", "cp1251", "latin-1")
+
+
+def _read_entries(path: str):
+    """Read one-entry-per-line file; skip blank lines and '# comment' lines."""
+    for enc in _ENCODINGS:
+        try:
+            with open(path, "r", encoding=enc) as f:
+                raw = f.read()
+            break
+        except UnicodeDecodeError:
+            continue
+
+    entries = []
+    for line in raw.splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        entries.append(line)
+    return entries
+
+
+class WildcardsProcessor:
+    """Replaces __name__ wildcards with random lines from wildcards/name.txt.
+
+    Recursive: a picked line may itself contain wildcards, which are resolved
+    in turn until no wildcard syntax remains. Seeded -> deterministic output.
+    """
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "prompt": ("STRING", {
+                    "multiline": True,
+                    "default": "",
+                    "placeholder": "portrait of the __color__ __race__",
+                }),
+                "seed": ("INT", {
+                    "default": 0,
+                    "min": 0,
+                    "max": 0xFFFFFFFFFFFFFFFF,
+                    "step": 1,
+                    "display": "number",
+                }),
+            },
+        }
+
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("processed_prompt",)
+    FUNCTION = "process"
+    CATEGORY = "utils/text"
+    OUTPUT_NODE = False
+
+    def process(self, prompt: str, seed: int):
+        if not prompt or not prompt.strip():
+            return ("",)
+        rng = random.Random(seed)
+        return (self._resolve(prompt, rng),)
+
+    # --- internals -------------------------------------------------------
+
+    def _load_entries(self, name: str):
+        """Return random-pickable entries for a wildcard name or raise."""
+        if not name or ".." in name or name.startswith("/") or os.path.isabs(name):
+            raise ValueError(
+                f"[WildcardsProcessor] Invalid wildcard name: '__{name}__'"
+            )
+
+        # Prefer the file exactly as named; fall back to appending '.txt'.
+        candidates = [name]
+        if not name.lower().endswith(".txt"):
+            candidates.append(name + ".txt")
+
+        for cand in candidates:
+            path = os.path.join(WILDCARDS_DIR, cand)
+            if os.path.isfile(path):
+                entries = _read_entries(path)
+                if not entries:
+                    raise ValueError(
+                        f"[WildcardsProcessor] Wildcard file '{cand}' has no "
+                        f"usable entries (only blank/comment lines)."
+                    )
+                return entries
+
+        raise FileNotFoundError(
+            f"[WildcardsProcessor] No wildcard file for '__{name}__'. "
+            f"Looked in: {WILDCARDS_DIR} (tried: {candidates}). "
+            f"Create {os.path.join(WILDCARDS_DIR, candidates[-1])}."
+        )
+
+    def _resolve(self, text: str, rng: random.Random) -> str:
+        """Replace wildcards left-to-right until none remain."""
+        replacements = 0
+        while True:
+            m = WILDCARD_RE.search(text)
+            if m is None:
+                return text
+
+            replacements += 1
+            if replacements > MAX_REPLACEMENTS:
+                raise ValueError(
+                    f"[WildcardsProcessor] Exceeded {MAX_REPLACEMENTS} wildcard "
+                    f"replacements — possible infinite recursion (a wildcard file "
+                    f"that references itself). Wildcards dir: {WILDCARDS_DIR}"
+                )
+
+            name = m.group(1).strip()
+            entry = rng.choice(self._load_entries(name))
+            text = text[:m.start()] + entry + text[m.end():]
+
+
+NODE_CLASS_MAPPINGS = {
+    "WildcardsProcessor": WildcardsProcessor,
+}
+
+NODE_DISPLAY_NAME_MAPPINGS = {
+    "WildcardsProcessor": "🎲 Wildcards Processor",
+}
