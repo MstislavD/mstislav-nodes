@@ -1,4 +1,1 @@
-# Lines here may contain other wildcards — they are resolved recursively.
-portrait of the __color__ __race__
-landscape of the __color__ plains
-a __race__ warrior in __color__ armor
+__personality__ __character__

@@ -41,6 +41,21 @@ blank/comment lines), the `__name__` placeholder is left in the output
 untouched — nothing raises. A file that references itself (directly or
 via a chain) is caught after 500 replacements.
 
+### 🖼️ Load Random Image
+Loads a random `.png` file from a folder as an IMAGE tensor.
+
+**Inputs:**
+- `folder_path` — absolute path to the folder containing the `.png` files
+- `seed` — random seed (same seed → same file while the folder is unchanged)
+- `recursive` *(optional)* — also search subfolders
+
+**Outputs:**
+- `image` — the loaded image (float `IMAGE` tensor, 0–1)
+- `file_name` — name of the file that was picked
+
+Only `.png` files are considered (case-insensitive). Raises an error if
+the folder does not exist or contains no `.png` files.
+
 ## Installation
 
 Clone into `ComfyUI/custom_nodes/`:
