@@ -23,3 +23,8 @@ lake-town
 watch tower
 encampment
 highroad
+vast grasslands
+farm
+countryside
+graveyard
+great boat

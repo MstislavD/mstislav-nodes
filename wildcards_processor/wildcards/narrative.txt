@@ -1,18 +1,93 @@
-feeding a __animal__
-perfuming
-combing
-grooming
-trying to catch a small __animal__
-serving food
-handing weapon ceremonially
-flying over the mountains
+burial
 defensive formation
-following tracks
-forging a weapon
-climbing a cliff
-firing a bow
-fighting a __animal__
-kiss
-playing musical instrument
+execution
 last stand
 party
+pursuit
+ritual
+weird cultural custom
+arguing
+bathing
+bellowing
+boasting
+bickering
+blustering
+bribing
+catching a small __animal__
+celebrating
+chattering
+cheating
+climbing
+combing
+competing
+confiscating
+counting
+dancing
+dressing
+drinking
+dueling
+eating
+eloping
+escaping
+examining
+feeding a __animal__
+fighting
+fighting a __animal__
+firing a bow
+floating
+fluttering
+flying
+following tracks
+forging a weapon
+gambling
+giggling
+gossiping
+grinning
+grooming
+grumbling
+haggling
+handing weapon ceremonially
+healing
+hiding
+hoarding
+hugging
+juggling
+kissing
+leading
+learning
+meddling
+mending
+observing
+orating
+perfuming
+playing
+playing musical instrument
+praying
+preeching
+quarelling
+rafting
+rambling
+reading
+regenerating
+resting
+roaring
+running
+searching
+serving food
+shouting
+sleeping
+sneaking
+speaking
+strolling
+studying
+summoning
+throwing
+torturing
+tracking
+training
+undressing
+wandering
+washing
+weeping
+whispering
+whistling

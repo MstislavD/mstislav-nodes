@@ -1,5 +1,3 @@
-decorative plants
-heavy jewelry
 minimal clothes
 only non-human characters
 impossible architecture
@@ -9,14 +7,6 @@ cozy architecture
 opulent architecture
 unique decorative ornament
 strange building materials
-statuary
-strange light sources
-weird cultural customs
-red metal
+__color__ metal
 bimetal
 prominent ornamental pattern
-crystalline plants
-weird geological formations
-alien plants
-insects
-butterflies

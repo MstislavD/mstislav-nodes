@@ -10,3 +10,18 @@ binoculars
 leather armor
 bonfire
 candles
+decorative plants
+heavy jewelry
+statuary
+crystalline plants
+weird geological formations
+alien plants
+magical plants
+exotic plants
+insects
+butterflies
+strange light sources
+cloak
+key
+vehicle (unique design)
+great boat 
