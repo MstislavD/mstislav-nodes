@@ -1,0 +1,5 @@
+opulent palace, gorgeous queen, worldbuilding: __realm__, worldbuilding: __worldbuilding__, narrative: __act__, character: __character__ and __character__, character: __character__ and __character__
+plaza in front of great temple, pompous ceremony, character: corpulent priestess, setting: __realm__, focus: __worldbuilding__, worldbuilding: __worldbuilding__, character: secondary __character__
+setting: __realm__, location: bustling fantasy city market, focus: __citizen__, character: __citizen__, character: __citizen__, character: __citizen__, character: __citizen__, character: __citizen__, focus: __worldbuilding__, worldbuilding: __worldbuilding__
+location: bustling fantasy city market, setting: __realm__, main character: __citizen__, secondary character: __citizen__, secondary character: __citizen__, focus: __worldbuilding__, worldbuilding: __worldbuilding__
+narrative focus: combing, setting: __realm__, main character: __citizen__, secondary character: __citizen__, secondary character: __citizen__, worldbuilding: __worldbuilding__, worldbuilding: __worldbuilding__

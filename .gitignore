@@ -4,4 +4,4 @@ __pycache__/
 .DS_Store
 
 # Wildcard data files are user content, not part of the repo
-wildcards_processor/wildcards/
+# wildcards_processor/wildcards/

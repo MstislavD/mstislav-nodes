@@ -1,0 +1,12 @@
+quiver
+short sword
+fallen log
+treasure hoard
+hoard
+dragon-hoard
+dripping lava
+molten metal
+binoculars
+leather armor
+bonfire
+candles
