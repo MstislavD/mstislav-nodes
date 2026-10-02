@@ -1,0 +1,106 @@
+acolyte
+adventurer
+alchemist
+ambassador
+apothecary
+archer
+artificer
+artist
+assassin
+auctioneer
+baker
+bard
+beggar
+blacksmith 
+bodyguard
+butcher
+captain
+chieftain
+chimney sweep
+city crier
+cook
+courier
+courtesan
+cultist
+dancer
+diplomat
+dockhand
+druid
+embalmer
+executioner
+farmer
+fence
+fishmonger
+guard
+hangman
+herald
+hound-master
+hunter
+innkeep
+inquisitor
+jailer
+jester
+judge
+juror
+knight
+lamplighter
+librarian
+lookout
+mage
+magistrate
+mechanic
+merchant
+messenger
+minstrel
+monarch
+moneylender
+monk
+musician
+necromancer
+paladin
+pathfinder
+pickpocket
+porter
+priest
+provisioner
+pyromancer
+ranger
+rat-catcher
+rogue
+sailor
+scholar
+scout
+scribe
+sculptor
+seamstress
+shaman
+shaper
+slave
+socialite
+soldier
+spinster
+spy
+stablehand
+statesman
+summoner
+taxman
+thief
+thinker
+tinkerer
+toymaker
+trader
+trapper
+torturer
+undertaker
+warlock
+warrior
+watchman
+witch
+__animal__ feeder
+__animal__ herder
+__animal__ keeper
+__animal__ master
+__animal__ rider
+__animal__ tamer
+__animal__ trainer
+__animal__ watcher
